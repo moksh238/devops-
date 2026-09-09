@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moksh Tayal — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board: #26332b;
+    --chalk: #f2f0e6;
+    --chalk-dim: #a9b3ac;
+    --yellow: #e8c468;
+    --coral: #d98b84;
+    --blue: #93b6b0;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--board);
+    background-image:
+      radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 3px 3px;
+    color: var(--chalk);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    padding: 56px 20px 100px;
+  }
+
+  .wrap{ max-width: 760px; margin: 0 auto; }
+
+  .board-header{
+    text-align:center;
+    margin-bottom: 64px;
+  }
+  .board-header h1{
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 44px;
+    margin: 0 0 8px;
+    color: var(--chalk);
+  }
+  .board-header .sub{
+    font-size: 13px;
+    color: var(--chalk-dim);
+  }
+  .board-header .sub .k{ color: var(--yellow); }
+
+  .erd{
+    position: relative;
+  }
+  .spine{
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    transform: translateX(-50%);
+    background: repeating-linear-gradient(
+      to bottom, var(--chalk-dim) 0 6px, transparent 6px 12px
+    );
+    height: 0;
+    animation: grow 1.6s ease-out forwards 0.2s;
+  }
+  @keyframes grow{ to{ height: calc(100% - 20px); } }
+
+  .row{
+    display: grid;
+    grid-template-columns: 1fr 76px 1fr;
+    align-items: center;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: appear 0.5s ease-out forwards;
+  }
+  .row:nth-child(2){ animation-delay: .5s; }
+  .row:nth-child(3){ animation-delay: .9s; }
+  .row:nth-child(4){ animation-delay: 1.3s; }
+  .row:nth-child(5){ animation-delay: 1.7s; }
+  .row:nth-child(6){ animation-delay: 2.1s; }
+  @keyframes appear{
+    from{ opacity:0; transform: translateY(8px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .spine{ animation:none; height: calc(100% - 20px); }
+    .row{ animation: none; opacity: 1; }
+  }
+
+  .connector{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap: 4px;
+    font-family: 'Kalam', cursive;
+    color: var(--coral);
+    font-size: 14px;
+  }
+  .connector .dot{
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--coral);
+    box-shadow: 0 0 0 4px var(--board);
+  }
+
+  .entity{
+    position: relative;
+    padding: 20px 22px;
+    border-radius: 7px;
+  }
+  .entity::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border: 2px solid var(--chalk);
+    border-radius: 7px;
+    filter: url(#chalk);
+    opacity: 0.85;
+    pointer-events:none;
+  }
+  .row-left .entity{ grid-column: 1; }
+  .row-right .entity{ grid-column: 3; }
+  .row-left .connector{ grid-column: 2; }
+  .row-right .connector{ grid-column: 2; }
+  .row-left .spacer{ grid-column: 3; }
+  .row-right .spacer{ grid-column: 1; }
+
+  .entity h2{
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0 0 12px;
+    color: var(--yellow);
+  }
+  .field{
+    font-size: 12.5px;
+    line-height: 1.85;
+    color: var(--chalk);
+    display:flex;
+    gap: 8px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .field .k{
+    color: var(--blue);
+    min-width: 84px;
+    flex-shrink:0;
+  }
+  .bio{
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--chalk-dim);
+    margin: 10px 0 0;
+  }
+
+  .sub-entity{
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(242,240,230,0.25);
+  }
+  .sub-entity:first-of-type{ margin-top: 0; padding-top: 0; border-top: none; }
+  .sub-entity .title{
+    font-family: 'Kalam', cursive;
+    color: var(--coral);
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .sub-entity .stack{
+    font-size: 11px;
+    color: var(--chalk-dim);
+    margin-bottom: 6px;
+  }
+
+  a{ color: var(--yellow); text-decoration: none; border-bottom: 1px dashed var(--yellow); }
+  a:hover{ border-bottom-style: solid; }
+
+  @media (max-width: 680px){
+    .row{ grid-template-columns: 1fr; margin-bottom: 40px; }
+    .row-left .entity, .row-right .entity{ grid-column: 1; }
+    .connector{ grid-column: 1; grid-row: 1; margin-bottom: 8px; flex-direction: row; }
+    .spacer{ display:none; }
+    .spine{ left: 24px; width:2px; }
+    .board-header h1{ font-size: 32px; }
+  }
+
+  :focus-visible{ outline: 2px solid var(--blue); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <filter id="chalk">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="noise" seed="7"></feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6"></feDisplacementMap>
+  </filter>
+</svg>
+
+<div class="wrap">
+
+  <div class="board-header">
+    <h1>Moksh Tayal</h1>
+    <div class="sub">Information Science &amp; Engineering · <span class="k">BMSCE, Bengaluru</span></div>
+  </div>
+
+  <div class="erd">
+    <div class="spine"></div>
+
+    <div class="row row-left">
+      <section class="entity" aria-label="About">
+        <h2>about</h2>
+        <div class="field"><span class="k">name</span> Moksh Tayal</div>
+        <div class="field"><span class="k">role</span> Third-year B.E., ISE</div>
+        <div class="field"><span class="k">institution</span> BMSCE, Bengaluru</div>
+        <p class="bio">I'm a third-year Information Science &amp; Engineering student who keeps ending up building small tools around a database — something worth tracking, storing, or summarizing. I like the moment a schema on paper turns into working CRUD.</p>
+      </section>
+      <div class="connector"><span class="dot"></span></div>
+      <div class="spacer"></div>
+    </div>
+
+    <div class="row row-right">
+      <div class="spacer"></div>
+      <div class="connector"><span class="dot"></span></div>
+      <section class="entity" aria-label="Education">
+        <h2>education</h2>
+        <div class="field"><span class="k">program</span> B.E., Information Science &amp; Engineering</div>
+        <div class="field"><span class="k">institution</span> BMSCE, Bengaluru, Karnataka</div>
+        <div class="field"><span class="k">expected_grad</span> 2027</div>
+        <div class="field"><span class="k">cgpa</span> 7.2 / 10</div>
+        <div class="field"><span class="k">coursework</span> Data Structures, DBMS, OS, Computer Networks, ML</div>
+      </section>
+    </div>
+
+    <div class="row row-left">
+      <section class="entity" aria-label="Skills">
+        <h2>skills</h2>
+        <div class="field"><span class="k">languages</span> C, C++, Java, Python, SQL</div>
+        <div class="field"><span class="k">web</span> HTML, CSS, JavaScript, React, Node.js</div>
+        <div class="field"><span class="k">databases</span> MySQL, MongoDB</div>
+        <div class="field"><span class="k">tools</span> Git, GitHub, Linux, VS Code, Postman</div>
+      </section>
+      <div class="connector"><span class="dot"></span></div>
+      <div class="spacer"></div>
+    </div>
+
+    <div class="row row-right">
+      <div class="spacer"></div>
+      <div class="connector"><span class="dot"></span></div>
+      <section class="entity" aria-label="Projects">
+        <h2>projects</h2>
+        <div class="sub-entity">
+          <div class="title">Student Attendance Management System</div>
+          <div class="stack">HTML · CSS · JavaScript · Node.js · MySQL</div>
+          <div class="field"><span class="k">purpose</span> Web app for teachers to mark, update, and track attendance across classes</div>
+          <div class="field"><span class="k">auth</span> Secure login with role-based access for teachers and admin</div>
+          <div class="field"><span class="k">schema</span> MySQL schema storing records, generating automated percentage &amp; report summaries</div>
+        </div>
+        <div class="sub-entity">
+          <div class="title">Personal Expense Tracker</div>
+          <div class="stack">HTML · CSS · JavaScript · Python (Flask) · SQLite</div>
+          <div class="field"><span class="k">purpose</span> Full-stack app to add, edit, and categorize daily income and expenses</div>
+          <div class="field"><span class="k">viz</span> Chart.js pie charts and monthly spending summaries</div>
+          <div class="field"><span class="k">backend</span> CRUD APIs over a SQLite schema for transaction data</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="row row-left">
+      <section class="entity" aria-label="Contact">
+        <h2>contact</h2>
+        <div class="field"><span class="k">email</span> <a href="mailto:mokshatayal@email.com">mokshatayal@email.com</a></div>
+        <div class="field"><span class="k">phone</span> +91-9340750739</div>
+        <div class="field"><span class="k">location</span> Bengaluru, Karnataka, India</div>
+        <div class="field"><span class="k">status</span> open to internships &amp; collaborations</div>
+      </section>
+      <div class="connector"><span class="dot"></span></div>
+      <div class="spacer"></div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
